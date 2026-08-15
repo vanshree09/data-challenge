@@ -1,0 +1,9 @@
+version: 2
+
+sources:
+  - name: raw
+    description: "Raw gaming data landed by AWS Glue from S3"
+    schema: raw
+    tables:
+      - name: game_performance
+        description: "Daily EGM performance data ingested from CSV files"
