@@ -63,10 +63,8 @@ def get_connection(password: str):
         password=password,
     )
 
-
+# Create the raw schema and audit table if they don't already exist.
 def ensure_schema_and_table(conn):
-    # Create the raw schema and audit table if they don't already exist.
-
     with conn.cursor() as cur:
         cur.execute("CREATE SCHEMA IF NOT EXISTS raw;")
         cur.execute(
@@ -98,13 +96,12 @@ def clean_int_column(series: pd.Series) -> pd.Series:
 
 # generates a 16 digit ingestion_id for each unique row ingested
 def generate_ingestion_id() -> str:
-    """16-digit unique numeric ID via hash of a UUID."""
     raw = uuid.uuid4().hex
     digest = hashlib.sha256(raw.encode()).hexdigest()
     numeric = int(digest, 16) % (10 ** 16)
     return str(numeric).zfill(16)
 
-#added audit fields to track the timestamps and CDC pattern
+# added audit fields to track the timestamps and CDC pattern
 def add_audit_fields(df: pd.DataFrame) -> pd.DataFrame:
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     df["ingestion_id"] = [generate_ingestion_id() for _ in range(len(df))]
@@ -113,7 +110,7 @@ def add_audit_fields(df: pd.DataFrame) -> pd.DataFrame:
     df["active_status"] = "Y"
     return df
 
-#drops exact row matches across all business columns
+# drops exact row matches across all business columns
 def drop_exact_duplicates(df: pd.DataFrame) -> pd.DataFrame:
     before = len(df)
     df = df.drop_duplicates(subset=BUSINESS_COLUMNS, keep="first").reset_index(drop=True)
@@ -122,7 +119,7 @@ def drop_exact_duplicates(df: pd.DataFrame) -> pd.DataFrame:
         print(f"Dropped {dropped} exact duplicate row(s).")
     return df
 
-#raises an error if any genuine duplicates across PK combination are present
+# raises an error if any genuine duplicates across PK combination are present
 def check_pk_duplicates(df: pd.DataFrame):
     dup_mask = df.duplicated(subset=PK_COLUMNS, keep=False)
     if dup_mask.any():
@@ -132,7 +129,7 @@ def check_pk_duplicates(df: pd.DataFrame):
             f"{dup_rows.to_string(index=False)}"
         )
 
-#Fetch current active (active_status = 'Y') records, keyed by PK.
+# fetch current active (active_status = 'Y') records, keyed by PK.
 def fetch_active_records(conn) -> dict:
     cols = BUSINESS_COLUMNS
     query = f"SELECT {', '.join(cols)} FROM {TABLE_NAME} WHERE active_status = 'Y'"
@@ -148,7 +145,7 @@ def fetch_active_records(conn) -> dict:
         active_lookup[key] = tuple(str(row[c]) for c in BUSINESS_COLUMNS)
     return active_lookup
 
-#inserts new rows
+# inserts new rows
 def insert_row(cur, row):
     cur.execute(
         f"""
@@ -165,7 +162,7 @@ def insert_row(cur, row):
         ),
     )
 
-#deactivates changed rows
+# deactivates changed rows
 def expire_row(cur, row, now_str):
     cur.execute(
         f"""
@@ -248,7 +245,6 @@ def main():
     )
     args = parser.parse_args()
 
-    # Fail fast on a bad path before opening a DB connection.
     if not os.path.isfile(args.file):
         print(f"ERROR: file not found: {args.file}", file=sys.stderr)
         sys.exit(1)

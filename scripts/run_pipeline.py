@@ -50,7 +50,7 @@ DBT_SELECT_STEPS = [
 
 # These two data tests fail against the current source data (13 rows each
 # with turnover_sum / games_played_sum <= 0) - known, expected, not a
-# pipeline defect. They're run separately, last, and not allowed to stop
+# pipeline defect. They're run separately, last, and don't stop
 # the pipeline or flip its exit code.
 KNOWN_FAILING_TESTS = ["check_positive_turnover", "check_positive_games_played"]
 
@@ -84,8 +84,6 @@ def main():
         )
         sys.exit(1)
 
-    # dbt reads the Postgres password from the PG_PASSWORD env var
-    # (see profiles.yml) - reuse the same --password value passed in here.
     dbt_env = os.environ.copy()
     dbt_env["DBT_PROFILES_DIR"] = DBT_PROJECT_DIR
     dbt_env["PG_PASSWORD"] = args.password
