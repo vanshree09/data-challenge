@@ -94,6 +94,28 @@ The `Incremental_Data Engineer Challenge_input.csv` file covers 4 cases:
 - Addition of a back-dated row (inserts it as a new record with the latest timestamp)
 - Change in a value of an older row (inactivates the old row and creates a new active row)
 
+Rows added to `Incremental_Data Engineer Challenge_input.csv` to exercise these cases:
+
+| bus_date | venue_code | egm_description | manufacturer | fp | turnover_sum | gmp_sum | games_played_sum |
+|---|---|---|---|---|---|---|---|
+| 2024-11-01 | 10177 | M)Bao Zhu Zhao Fu Blue Festival f64 s63912 a24620 | ARISTOCRAT | 2 | 3000 | 338.37 | 3955 |
+| 2024-11-01 | 10177 | M)Spring Festival - Lion Link F59 S12345 | ARISTOCRAT | 11 | 123 | 456 | 789 |
+| 2024-12-02 | 10208 | M)Dynamite Dollars All Aboard F1068 S590 BIOS2 | KONAMI | 1 | 3367 | -250.96 | 2356 |
+| 2024-12-02 | 10208 | M)JetSetter Gold Sydney f26 s61066 a25833 | IGT | 2 | 1297.8 | 367.05 | 984 |
+| 2024-12-02 | 10208 | M)Locked Up Loot – Locked and Loaded F43 S384 -TITO | Shufflemaster | 4 | 3005.35 | 494.6 | 1858 |
+| 2024-12-02 | 10208 | M)Happy and Prosperous Dragon Cash f59 s63463-63467 | ARISTOCRAT | 5 | 3773.22 | 1403.04 | 2378 |
+| 2024-12-02 | 10208 | M)Monopoly Hotel Tycoon F212 S4096 Dualos | Shufflemaster | 6 | 2268.18 | 572.17 | 3381 |
+| 2024-12-02 | 10208 | M)Forever Emperor - Dragon Train DTX f405 s5252 a26896 | Shufflemaster | 7 | 8339.34 | 791.73 | 4550 |
+| 2024-12-02 | 10208 | M)Chi Lin Wins - Dragon Train DTX f405 s5234 a26829 | Shufflemaster | 8 | 5063.78 | 956.99 | 3808 |
+| 2024-12-02 | 10208 | M)JetSetter Gold Tokyo MLP CD f27 s60904 a26116 | IGT | 8 | 1594.4 | 95.75 | 930 |
+| 2024-12-02 | 10208 | M)Huff n' More Puff f304 s4654 a23832 | Shufflemaster | 9 | 10538.55 | 1454 | 3948 |
+| 2024-12-02 | 10208 | M)Treasure Spirits Tiger f1793 s3500 | Ainsworth | 9 | 870.23 | 460.13 | 673 |
+
+The first row (`fp=2`, ARISTOCRAT, 2024-11-01) changes `turnover_sum` from `2933.00` to `3000`
+against an existing PK in `Data Engineer Challenge_input.csv` - a genuine SCD2 "changed value"
+row. The rest introduce PKs the base file doesn't have (a new `fp` on an existing venue/date,
+or `2024-12-02`, a date past the base file's range) - exercising the "new rows" case instead.
+
 This replicates SCD2-style ingestion, with audit columns added to trace the data timestamp.
 
 **Primary key**: composite PK of `bus_date`, `venue_code`, `manufacturer`, and `fp`.
