@@ -26,12 +26,7 @@ first ingestion run if they don't already exist.
    pip install -r requirements.txt
    ```
 
-2. **Set up the dbt connection profile** (one-time, per machine). `profiles.yml` is
-   gitignored - a fresh clone won't have it, and dbt can't connect without it:
-
-   ```bash
-   cp profiles.yml.example profiles.yml
-   ```
+2. **Set up the dbt connection profile** (one-time, per machine). `profiles.yml` will need to be set-up
 
 3. **Credentials**: host/port/db/user are read from optional environment variables -
    `PG_HOST`, `PG_PORT`, `PG_DB`, `PG_USER` - falling back to `localhost` / `5432` /
