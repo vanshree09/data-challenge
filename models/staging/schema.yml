@@ -5,7 +5,7 @@ sources:
     description: "Raw gaming data landed by AWS Glue from S3"
     schema: raw
     tables:
-      - name: game_performance
+      - name: game_performance_audit
         description: "Daily EGM performance data ingested from CSV files"
         
 models:
