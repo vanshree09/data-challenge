@@ -9,3 +9,7 @@ profiles.yml
 
 # dbt anonymous usage-tracking id, generated locally on first run
 .user.yml
+
+# Python
+__pycache__/
+*.pyc
