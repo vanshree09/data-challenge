@@ -15,9 +15,30 @@ from staging onwards.
 
 ## Setup process
 
-- Configure database credentials
-- Install Python dependencies: `pandas` and `psycopg2-binary`
-- Install `dbt-core`
+**Prerequisites**: Python 3.8+, and a PostgreSQL instance you can reach (defaults to
+`localhost:5432`, database `postgres`, user `postgres` - see below to point elsewhere).
+The `raw` schema and `raw.game_performance_audit` table are created automatically on
+first ingestion run if they don't already exist.
+
+1. **Install dependencies** (pandas, psycopg2-binary, dbt-core, dbt-postgres):
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+2. **Set up the dbt connection profile** (one-time, per machine). `profiles.yml` is
+   gitignored - a fresh clone won't have it, and dbt can't connect without it:
+
+   ```bash
+   cp profiles.yml.example profiles.yml
+   ```
+
+3. **Credentials**: host/port/db/user are read from optional environment variables -
+   `PG_HOST`, `PG_PORT`, `PG_DB`, `PG_USER` - falling back to `localhost` / `5432` /
+   `postgres` / `postgres` if unset. The password is never stored in a file or env var
+   by default; it's passed per run via `--password` to `run_pipeline.py` (or
+   `ingest_csv_to_postgres.py` directly), which forwards it to both the ingestion
+   script and dbt (as `PG_PASSWORD`) for that run only.
 
 ## Project structure
 

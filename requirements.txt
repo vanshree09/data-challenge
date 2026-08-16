@@ -1,0 +1,4 @@
+pandas>=1.2
+psycopg2-binary>=2.9
+dbt-core>=1.10
+dbt-postgres>=1.9
