@@ -22,5 +22,5 @@ FROM {{ source('raw', 'game_performance_audit') }}
 WHERE active_status = 'Y'
 
 {% if is_incremental() %}
-WHERE CAST(bus_date AS date) > (SELECT max(bus_date) FROM {{ this }})
+AND CAST(bus_date AS date) > (SELECT max(bus_date) FROM {{ this }})
 {% endif %}

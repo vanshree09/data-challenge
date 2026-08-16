@@ -1,0 +1,22 @@
+# Copy this file to profiles.yml (same folder) for local dbt Core runs.
+# profiles.yml is gitignored - never commit real credentials.
+#
+# dbt Core needs to find this file via one of:
+#   - DBT_PROFILES_DIR env var pointing at this folder, or
+#   - ~/.dbt/profiles.yml (default location)
+#
+# Set these before running dbt:
+#   PG_HOST, PG_PORT, PG_DB, PG_USER, PG_PASSWORD
+
+default:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: "{{ env_var('PG_HOST', 'localhost') }}"
+      port: "{{ env_var('PG_PORT', '5432') | as_number }}"
+      dbname: "{{ env_var('PG_DB', 'postgres') }}"
+      user: "{{ env_var('PG_USER', 'postgres') }}"
+      password: "{{ env_var('PG_PASSWORD') }}"
+      schema: public
+      threads: 4

@@ -3,3 +3,9 @@
 target/
 dbt_packages/
 logs/
+
+# local dbt Core connection profile - copy from profiles.yml.example
+profiles.yml
+
+# dbt anonymous usage-tracking id, generated locally on first run
+.user.yml
