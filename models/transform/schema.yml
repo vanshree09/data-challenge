@@ -1,0 +1,22 @@
+version: 2
+
+models:
+  - name: fact_venue_turnover
+    description: Total turnover by venue
+    columns:
+      - name: venue_code
+      - name: total_turnover
+
+  - name: fact_egm_venue_revenue
+    description: Total revenue by EGM and venue
+    columns:
+      - name: venue_code
+      - name: egm_description
+      - name: total_revenue
+
+  - name: fact_daily_summary
+    description: Daily turnover and revenue summary
+    columns:
+      - name: bus_date
+      - name: total_turnover
+      - name: total_revenue
